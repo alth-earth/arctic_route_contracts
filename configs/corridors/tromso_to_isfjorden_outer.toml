@@ -1,0 +1,53 @@
+schema_version = "corridor.v1"
+corridor_id = "tromso_to_isfjorden_outer"
+version = "1.0.0"
+display_name = "Tromso offshore to Isfjorden outer entrance"
+role = "transfer_validation"
+crs = "EPSG:4326"
+
+[start]
+longitude = 19.00
+latitude = 69.75
+
+[destination]
+longitude = 13.00
+latitude = 78.15
+
+[start_allowed_region]
+west = 18.00
+south = 69.40
+east = 20.50
+north = 70.00
+
+[destination_allowed_region]
+west = 12.00
+south = 77.90
+east = 16.50
+north = 78.40
+
+[data_bbox]
+west = 10.00
+south = 68.50
+east = 22.00
+north = 79.50
+
+[horizon_policy]
+default_hours = 96
+minimum_hours = 72
+maximum_hours = 144
+corridor_detour_factor = 1.08
+conservative_environment_speed_factor = 0.80
+minimum_buffer_hours = 24
+proportional_buffer = 0.20
+rounding_hours = 24
+
+[[reference_points]]
+reference_id = "longyearbyen_ais_reference"
+display_name = "Longyearbyen AIS reference"
+purpose = "Complete-voyage AIS identification only; fjord and port tracks are excluded"
+excluded_from_route_optimization = true
+
+[reference_points.location]
+longitude = 15.65
+latitude = 78.22
+

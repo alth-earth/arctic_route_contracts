@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/arctic-route/contracts/corridor-v1.schema.json",
+  "title": "Arctic route corridor facts",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "corridor_id", "version", "display_name", "role", "crs",
+    "start", "destination", "start_allowed_region", "destination_allowed_region",
+    "data_bbox", "horizon_policy", "reference_points"
+  ],
+  "properties": {
+    "schema_version": {"const": "corridor.v1"},
+    "corridor_id": {"$ref": "#/$defs/id"},
+    "version": {"$ref": "#/$defs/version"},
+    "display_name": {"type": "string", "minLength": 1},
+    "role": {"enum": ["primary_development", "transfer_validation"]},
+    "crs": {"const": "EPSG:4326"},
+    "start": {"$ref": "#/$defs/point"},
+    "destination": {"$ref": "#/$defs/point"},
+    "start_allowed_region": {"$ref": "#/$defs/bbox"},
+    "destination_allowed_region": {"$ref": "#/$defs/bbox"},
+    "data_bbox": {"$ref": "#/$defs/bbox"},
+    "horizon_policy": {"$ref": "#/$defs/horizon"},
+    "reference_points": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/reference_point"}
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,127}$"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:\\+[A-Za-z0-9.-]+)?$"},
+    "point": {
+      "type": "object", "additionalProperties": false,
+      "required": ["longitude", "latitude"],
+      "properties": {
+        "longitude": {"type": "number", "minimum": -180, "maximum": 180},
+        "latitude": {"type": "number", "minimum": -90, "maximum": 90}
+      }
+    },
+    "bbox": {
+      "type": "object", "additionalProperties": false,
+      "required": ["west", "south", "east", "north"],
+      "properties": {
+        "west": {"type": "number"}, "south": {"type": "number"},
+        "east": {"type": "number"}, "north": {"type": "number"}
+      }
+    },
+    "horizon": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "default_hours", "minimum_hours", "maximum_hours", "corridor_detour_factor",
+        "conservative_environment_speed_factor", "minimum_buffer_hours",
+        "proportional_buffer", "rounding_hours"
+      ],
+      "properties": {
+        "default_hours": {"type": "integer", "minimum": 1},
+        "minimum_hours": {"type": "integer", "minimum": 1},
+        "maximum_hours": {"type": "integer", "minimum": 1},
+        "corridor_detour_factor": {"type": "number", "minimum": 1},
+        "conservative_environment_speed_factor": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+        "minimum_buffer_hours": {"type": "integer", "minimum": 1},
+        "proportional_buffer": {"type": "number", "minimum": 0},
+        "rounding_hours": {"type": "integer", "minimum": 1}
+      }
+    },
+    "reference_point": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reference_id", "display_name", "location", "purpose", "excluded_from_route_optimization"],
+      "properties": {
+        "reference_id": {"$ref": "#/$defs/id"},
+        "display_name": {"type": "string", "minLength": 1},
+        "location": {"$ref": "#/$defs/point"},
+        "purpose": {"type": "string", "minLength": 1},
+        "excluded_from_route_optimization": {"type": "boolean"}
+      }
+    }
+  }
+}

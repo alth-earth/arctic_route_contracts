@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/arctic-route/contracts/scenario-v2.schema.json",
+  "title": "Arctic route scenario",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "scenario_id", "version", "display_name", "corridor_id",
+    "corridor_version", "mode", "simulation_start", "simulation_end", "horizon_hours",
+    "default_vessel_profile_id", "default_vessel_profile_version",
+    "required_data_types", "optional_data_types", "forecast_anchor_policy",
+    "is_template", "random_seed"
+  ],
+  "properties": {
+    "schema_version": {"const": "scenario.v2"},
+    "scenario_id": {"$ref": "#/$defs/id"},
+    "version": {"$ref": "#/$defs/version"},
+    "display_name": {"type": "string", "minLength": 1},
+    "corridor_id": {"$ref": "#/$defs/id"},
+    "corridor_version": {"$ref": "#/$defs/version"},
+    "mode": {"enum": ["retrospective_best_estimate", "frozen_forecast"]},
+    "simulation_start": {"type": ["string", "null"], "format": "date-time"},
+    "simulation_end": {"type": ["string", "null"], "format": "date-time"},
+    "horizon_hours": {"type": "integer", "minimum": 1},
+    "default_vessel_profile_id": {"$ref": "#/$defs/id"},
+    "default_vessel_profile_version": {"$ref": "#/$defs/version"},
+    "required_data_types": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"},
+      "description": "Canonical sorted data types required before a formal RunContext can be created."
+    },
+    "optional_data_types": {
+      "type": "array", "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"},
+      "description": "Canonical sorted research or information layers accepted by the scenario but not required for MVP execution."
+    },
+    "forecast_anchor_policy": {"enum": ["explicit_utc_only", null]},
+    "is_template": {"type": "boolean"},
+    "random_seed": {"type": "integer"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,127}$"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:\\+[A-Za-z0-9.-]+)?$"}
+  }
+}

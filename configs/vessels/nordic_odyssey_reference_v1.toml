@@ -1,0 +1,25 @@
+schema_version = "vessel-profile.v2"
+vessel_profile_id = "nordic_odyssey_reference_v1"
+version = "1.0.0"
+display_name = "Nordic Odyssey public reference (unvalidated)"
+calibration_status = "public_reference_unvalidated"
+vessel_type = "ice-strengthened Panamax bulk carrier"
+imo_number = "9529451"
+deadweight_tonnes = 75603
+ice_class_system = "Finnish-Swedish Ice Class Rules"
+ice_class = "1A"
+built_year = 2010
+builder = "Oshima Shipbuilding Co., Ltd."
+length_overall_m = 225.0
+beam_m = 32.31
+reported_draft_m = 14.08
+nominal_speed_knots = 15.7
+reference_load_condition = "laden research reference; displacement and performance are not calibrated"
+source_urls = [
+    "https://www.pangaeals.com/fleet/",
+    "https://www.pangaeals.com/timeline/",
+    "https://www.hafen-hamburg.de/en/vessels/nordic-odyssey-25019/",
+    "https://chnl.no/wp-content/uploads/2022/12/statistics2013.pdf",
+]
+source_notes = "Public reference only. Ice Class 1A is an FSICR class, not Polar Class PC6. Public dimensions and nominal speed do not calibrate maneuvering, propulsion, ice resistance, minimum safe speed, turning radius, under-keel clearance, or legal route eligibility."
+

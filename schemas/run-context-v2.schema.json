@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/arctic-route/contracts/run-context-v2.schema.json",
+  "title": "Immutable Arctic-route run context",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "run_id", "created_at", "scenario_id", "scenario_version",
+    "scenario_mode", "simulation_start", "simulation_end", "scenario_digest",
+    "corridor_id", "corridor_version", "corridor_digest", "vessel_profile_id",
+    "vessel_profile_version", "vessel_profile_digest", "dataset_bundle_id",
+    "dataset_bundle_digest", "config_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "run-context.v2"},
+    "run_id": {"type": "string", "pattern": "^run-[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "scenario_id": {"$ref": "#/$defs/id"},
+    "scenario_version": {"$ref": "#/$defs/version"},
+    "scenario_mode": {"enum": ["retrospective_best_estimate", "frozen_forecast"]},
+    "simulation_start": {"type": "string", "format": "date-time"},
+    "simulation_end": {"type": "string", "format": "date-time"},
+    "scenario_digest": {"$ref": "#/$defs/digest"},
+    "corridor_id": {"$ref": "#/$defs/id"},
+    "corridor_version": {"$ref": "#/$defs/version"},
+    "corridor_digest": {"$ref": "#/$defs/digest"},
+    "vessel_profile_id": {"$ref": "#/$defs/id"},
+    "vessel_profile_version": {"$ref": "#/$defs/version"},
+    "vessel_profile_digest": {"$ref": "#/$defs/digest"},
+    "dataset_bundle_id": {"type": "string", "pattern": "^a-bundle-[0-9a-f]{24}$"},
+    "dataset_bundle_digest": {"$ref": "#/$defs/digest"},
+    "config_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,127}$"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:\\+[A-Za-z0-9.-]+)?$"},
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

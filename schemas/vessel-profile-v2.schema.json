@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/arctic-route/contracts/vessel-profile-v2.schema.json",
+  "title": "Shared vessel public-reference facts",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "vessel_profile_id", "version", "display_name",
+    "calibration_status", "vessel_type", "imo_number", "deadweight_tonnes",
+    "ice_class_system", "ice_class", "built_year", "builder", "length_overall_m",
+    "beam_m", "reported_draft_m", "nominal_speed_knots", "reference_load_condition",
+    "source_urls", "source_notes"
+  ],
+  "properties": {
+    "schema_version": {"const": "vessel-profile.v2"},
+    "vessel_profile_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,127}$"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:\\+[A-Za-z0-9.-]+)?$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "calibration_status": {"enum": ["public_reference_unvalidated", "calibrated"]},
+    "vessel_type": {"type": "string", "minLength": 1},
+    "imo_number": {"type": "string", "pattern": "^[0-9]{7}$"},
+    "deadweight_tonnes": {"type": "integer", "minimum": 1},
+    "ice_class_system": {"type": "string", "minLength": 1},
+    "ice_class": {"type": "string", "minLength": 1},
+    "built_year": {"type": "integer", "minimum": 1900, "maximum": 2100},
+    "builder": {"type": "string", "minLength": 1},
+    "length_overall_m": {"type": "number", "exclusiveMinimum": 0},
+    "beam_m": {"type": "number", "exclusiveMinimum": 0},
+    "reported_draft_m": {"type": "number", "exclusiveMinimum": 0},
+    "nominal_speed_knots": {"type": "number", "exclusiveMinimum": 0},
+    "reference_load_condition": {"type": "string", "minLength": 1},
+    "source_urls": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "format": "uri"}},
+    "source_notes": {"type": "string", "minLength": 1}
+  }
+}

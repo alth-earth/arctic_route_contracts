@@ -1,0 +1,19 @@
+schema_version = "scenario.v2"
+scenario_id = "murmansk_dikson_frozen_forecast_template_v1"
+version = "1.0.0"
+display_name = "Murmansk-Dikson frozen forecast template"
+corridor_id = "offshore_murmansk_to_offshore_dikson"
+corridor_version = "2.0.0"
+mode = "frozen_forecast"
+horizon_hours = 168
+default_vessel_profile_id = "nordic_odyssey_reference_v1"
+default_vessel_profile_version = "1.0.0"
+required_data_types = [
+  "land_sea_mask", "ocean_current", "sea_ice_concentration", "sea_ice_drift",
+  "sea_ice_edge", "sea_ice_thickness", "sea_ice_type", "temperature",
+  "visibility", "water_level", "wave", "wind_field",
+]
+optional_data_types = ["bathymetry", "long_term_restricted_area"]
+forecast_anchor_policy = "explicit_utc_only"
+is_template = true
+random_seed = 0
