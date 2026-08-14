@@ -123,7 +123,7 @@ class HorizonPolicy:
     maximum_hours: int
     corridor_detour_factor: float
     conservative_environment_speed_factor: float
-    minimum_buffer_hours: int = 24
+    minimum_buffer_hours: int = 48
     proportional_buffer: float = 0.20
     rounding_hours: int = 24
 

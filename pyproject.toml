@@ -1,6 +1,6 @@
 [project]
 name = "arctic-route-contracts"
-version = "0.2.0"
+version = "0.3.0"
 description = "Shared immutable scenario, corridor, vessel, and run-context contracts"
 readme = "README.md"
 requires-python = ">=3.11"

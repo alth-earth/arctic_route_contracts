@@ -2,6 +2,8 @@
 
 `arctic-route-contracts` 是 A/B/C/D 之外的轻量共享包。它只保存走廊、场景、船舶公共事实与一次运行的不可变身份，不保存任何工作包的算法参数，也不执行下载、风险计算、航线规划或可视化。
 
+当前版本为 `0.3.0`。
+
 ## 当前基线
 
 ### 走廊
@@ -27,8 +29,13 @@ design_distance = candidate_route_distance（若已有）
                   else great_circle_distance × corridor_detour_factor
 planning_speed = nominal_speed × conservative_environment_speed_factor
 eta = design_distance / planning_speed
-required = ceil_24h(eta + max(24h, 20% × eta))
+required = ceil_24h(eta + max(48h, 20% × eta))
 ```
+
+`0.3.0` 将两条走廊的最小缓冲统一提高到 48 h；走廊版本分别为 `2.1.0` 和
+`1.1.0`，四个场景配置版本均为 `1.1.0`。默认窗仍为 168/96 h，上限仍为
+216/144 h。旧 RunContext 可继续按自身身份审计，但新旧走廊/场景版本和
+`config_digest` 不得混用。
 
 若 `required` 超出该走廊正式上限，接口报告 `forecast_coverage_insufficient`，绝不把截断后的尾段伪装为完整预报。
 
@@ -83,7 +90,7 @@ PYTHONPATH=src python -m arctic_route_contracts validate
 arctic-route-context recommend-horizon \
   --corridor offshore_murmansk_to_offshore_dikson \
   --vessel nordic_odyssey_reference_v1 \
-  --candidate-route-distance-nm 1250
+  --candidate-route-distance-nm 1137
 ```
 
 命令输出 `required_hours/selected_hours/maximum_hours`。若超出来源与个人电脑演示上限，
@@ -104,7 +111,7 @@ arctic-route-context create \
 arctic-route-context create \
   --scenario murmansk_dikson_frozen_forecast_template_v1 \
   --simulation-start 2026-08-12T00:00:00Z \
-  --candidate-route-distance-nm 1250 \
+  --candidate-route-distance-nm 1137 \
   --dataset-bundle /path/from-A/dataset-bundle.json \
   --output /path/to/run-context.json
 ```

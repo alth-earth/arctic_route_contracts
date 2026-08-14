@@ -1,9 +1,9 @@
 schema_version = "scenario.v2"
 scenario_id = "murmansk_dikson_july_2026_retrospective_v1"
-version = "1.0.0"
+version = "1.1.0"
 display_name = "Murmansk-Dikson July 2026 retrospective best estimate"
 corridor_id = "offshore_murmansk_to_offshore_dikson"
-corridor_version = "2.0.0"
+corridor_version = "2.1.0"
 mode = "retrospective_best_estimate"
 simulation_start = 2026-07-15T00:00:00Z
 simulation_end = 2026-07-22T00:00:00Z

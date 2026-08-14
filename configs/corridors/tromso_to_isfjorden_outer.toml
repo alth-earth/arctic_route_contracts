@@ -1,6 +1,6 @@
 schema_version = "corridor.v1"
 corridor_id = "tromso_to_isfjorden_outer"
-version = "1.0.0"
+version = "1.1.0"
 display_name = "Tromso offshore to Isfjorden outer entrance"
 role = "transfer_validation"
 crs = "EPSG:4326"
@@ -37,7 +37,7 @@ minimum_hours = 72
 maximum_hours = 144
 corridor_detour_factor = 1.08
 conservative_environment_speed_factor = 0.80
-minimum_buffer_hours = 24
+minimum_buffer_hours = 48
 proportional_buffer = 0.20
 rounding_hours = 24
 
@@ -50,4 +50,3 @@ excluded_from_route_optimization = true
 [reference_points.location]
 longitude = 15.65
 latitude = 78.22
-

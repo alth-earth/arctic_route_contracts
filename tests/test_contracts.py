@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -20,6 +21,7 @@ from arctic_route_contracts import (
     load_scenario,
     load_vessel_profile,
     materialize_frozen_forecast,
+    validate_scenario_for_corridor,
     write_run_context_atomic,
 )
 from arctic_route_contracts.bundle import DatasetBundleIdentity
@@ -193,7 +195,9 @@ def test_mentor_corridor_facts_and_roles_are_exact() -> None:
     assert primary.start_allowed_region.west == 33.0
     assert primary.destination_allowed_region.east == 81.0
     assert primary.role is CorridorRole.PRIMARY_DEVELOPMENT
+    assert primary.version == "2.1.0"
     assert primary.horizon_policy.default_hours == 168
+    assert primary.horizon_policy.minimum_buffer_hours == 48
     assert (primary.horizon_policy.minimum_hours, primary.horizon_policy.maximum_hours) == (
         144,
         216,
@@ -202,7 +206,9 @@ def test_mentor_corridor_facts_and_roles_are_exact() -> None:
     assert (transfer.start.latitude, transfer.start.longitude) == (69.75, 19.0)
     assert (transfer.destination.latitude, transfer.destination.longitude) == (78.15, 13.0)
     assert transfer.role is CorridorRole.TRANSFER_VALIDATION
+    assert transfer.version == "1.1.0"
     assert transfer.horizon_policy.default_hours == 96
+    assert transfer.horizon_policy.minimum_buffer_hours == 48
     assert len(transfer.reference_points) == 1
     longyearbyen = transfer.reference_points[0]
     assert (longyearbyen.location.latitude, longyearbyen.location.longitude) == (78.22, 15.65)
@@ -221,14 +227,33 @@ def test_horizon_formula_reports_unsupported_tail_instead_of_clamping() -> None:
             great_circle_distance_nm=primary.great_circle_distance_nm,
             nominal_speed_knots=15.7,
         )
-        == 144
+        == 168
     )
     assert (
         transfer.horizon_policy.recommend_hours(
             great_circle_distance_nm=transfer.great_circle_distance_nm,
             nominal_speed_knots=15.7,
         )
-        == 72
+        == 96
+    )
+    # The 10-day sprint freezes these two design-distance examples.  They are
+    # deliberately separate from the great-circle fallback above so a future
+    # corridor geometry edit cannot silently change the demo window.
+    assert (
+        primary.horizon_policy.recommend_hours(
+            great_circle_distance_nm=primary.great_circle_distance_nm,
+            nominal_speed_knots=15.7,
+            candidate_route_distance_nm=1137,
+        )
+        == 168
+    )
+    assert (
+        transfer.horizon_policy.recommend_hours(
+            great_circle_distance_nm=transfer.great_circle_distance_nm,
+            nominal_speed_knots=15.7,
+            candidate_route_distance_nm=555,
+        )
+        == 96
     )
     assessment = primary.horizon_policy.assess_hours(
         great_circle_distance_nm=primary.great_circle_distance_nm,
@@ -251,10 +276,14 @@ def test_dual_scenarios_have_distinct_truth_semantics() -> None:
     template = load_scenario(ROOT, "murmansk_dikson_frozen_forecast_template_v1")
 
     assert retrospective.mode is ScenarioMode.RETROSPECTIVE_BEST_ESTIMATE
+    assert retrospective.version == "1.1.0"
+    assert retrospective.corridor_version == "2.1.0"
     assert retrospective.simulation_start == datetime(2026, 7, 15, tzinfo=UTC)
     assert retrospective.simulation_end == datetime(2026, 7, 22, tzinfo=UTC)
     assert retrospective.is_template is False
     assert template.mode is ScenarioMode.FROZEN_FORECAST
+    assert template.version == "1.1.0"
+    assert template.corridor_version == "2.1.0"
     assert template.is_template is True
     assert template.simulation_start is None
     assert set(retrospective.required_data_types) == set(FORMAL_DATA_PROFILE)
@@ -273,11 +302,11 @@ def test_frozen_template_requires_explicit_anchor_and_is_deterministic() -> None
 
     assert first == second
     assert first.scenario_id == "murmansk_dikson_frozen_forecast_20260812t0000z_v1"
-    assert first.version == "1.0.0+start.20260812t0000z"
+    assert first.version == "1.1.0+start.20260812t0000z"
     assert first.simulation_end == datetime(2026, 8, 19, tzinfo=UTC)
     shorter = materialize_frozen_forecast(template, start, horizon_hours=144)
     assert shorter.scenario_id == ("murmansk_dikson_frozen_forecast_20260812t0000z_h144_v1")
-    assert shorter.version == "1.0.0+start.20260812t0000z.h144"
+    assert shorter.version == "1.1.0+start.20260812t0000z.h144"
     assert shorter.simulation_end == datetime(2026, 8, 18, tzinfo=UTC)
     with pytest.raises(ContractError, match="timezone"):
         materialize_frozen_forecast(template, datetime(2026, 8, 12))
@@ -302,6 +331,57 @@ def test_canonical_digest_is_stable_and_covers_corridor_facts() -> None:
     assert canonical_sha256(primary) == canonical_sha256(primary)
     transfer = load_corridor(ROOT, TROMSO)
     assert canonical_sha256(primary) != canonical_sha256(transfer)
+
+
+def test_previous_policy_context_remains_readable_but_cannot_mix_with_current_config(
+    tmp_path: Path,
+) -> None:
+    scenario = load_scenario(ROOT, "murmansk_dikson_july_2026_retrospective_v1")
+    corridor = load_corridor(ROOT, MURMANSK)
+    vessel = load_vessel_profile(ROOT, VESSEL)
+    bundle = load_dataset_bundle(
+        _write_bundle(
+            tmp_path,
+            corridor_id=MURMANSK,
+            start="2026-07-15T00:00:00Z",
+            end="2026-07-22T00:00:00Z",
+        )
+    )
+    current = create_run_context(
+        scenario=scenario,
+        corridor=corridor,
+        vessel=vessel,
+        dataset_bundle=bundle,
+        run_id="run-00000000-0000-4000-8000-000000000001",
+        created_at=datetime(2026, 7, 15, tzinfo=UTC),
+    )
+    previous_corridor = replace(
+        corridor,
+        version="2.0.0",
+        horizon_policy=replace(corridor.horizon_policy, minimum_buffer_hours=24),
+    )
+    previous_scenario = replace(
+        scenario,
+        version="1.0.0",
+        corridor_version=previous_corridor.version,
+    )
+    previous = create_run_context(
+        scenario=previous_scenario,
+        corridor=previous_corridor,
+        vessel=vessel,
+        dataset_bundle=bundle,
+        run_id="run-00000000-0000-4000-8000-000000000002",
+        created_at=datetime(2026, 7, 15, tzinfo=UTC),
+    )
+
+    previous_path = tmp_path / "previous-run-context.json"
+    write_run_context_atomic(previous, previous_path)
+    assert load_run_context(previous_path) == previous
+    assert previous.config_digest != current.config_digest
+    assert previous.scenario_digest != current.scenario_digest
+    assert previous.corridor_digest != current.corridor_digest
+    with pytest.raises(ContractError, match="different corridor version"):
+        validate_scenario_for_corridor(previous_scenario, corridor)
 
 
 def test_a_bundle_is_independently_verified_and_binds_run_context(tmp_path: Path) -> None:
@@ -582,7 +662,7 @@ def test_cli_recommends_route_specific_horizon_and_reports_source_cap(
     assert main(base) == 0
     supported = json.loads(capsys.readouterr().out)
     assert supported["coverage_sufficient"] is True
-    assert supported["selected_hours"] == 144
+    assert supported["selected_hours"] == 168
 
     assert main([*base, "--candidate-route-distance-nm", "3000"]) == 2
     unsupported = json.loads(capsys.readouterr().out)

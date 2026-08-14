@@ -1,9 +1,9 @@
 schema_version = "scenario.v2"
 scenario_id = "tromso_isfjorden_frozen_forecast_template_v1"
-version = "1.0.0"
+version = "1.1.0"
 display_name = "Tromso-Isfjorden frozen forecast template"
 corridor_id = "tromso_to_isfjorden_outer"
-corridor_version = "1.0.0"
+corridor_version = "1.1.0"
 mode = "frozen_forecast"
 horizon_hours = 96
 default_vessel_profile_id = "nordic_odyssey_reference_v1"

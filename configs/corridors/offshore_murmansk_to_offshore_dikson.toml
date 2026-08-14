@@ -1,6 +1,6 @@
 schema_version = "corridor.v1"
 corridor_id = "offshore_murmansk_to_offshore_dikson"
-version = "2.0.0"
+version = "2.1.0"
 display_name = "Murmansk offshore to Dikson offshore"
 role = "primary_development"
 crs = "EPSG:4326"
@@ -37,7 +37,6 @@ minimum_hours = 144
 maximum_hours = 216
 corridor_detour_factor = 1.25
 conservative_environment_speed_factor = 0.65
-minimum_buffer_hours = 24
+minimum_buffer_hours = 48
 proportional_buffer = 0.20
 rounding_hours = 24
-

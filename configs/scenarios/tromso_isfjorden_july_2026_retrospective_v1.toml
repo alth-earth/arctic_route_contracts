@@ -1,9 +1,9 @@
 schema_version = "scenario.v2"
 scenario_id = "tromso_isfjorden_july_2026_retrospective_v1"
-version = "1.0.0"
+version = "1.1.0"
 display_name = "Tromso-Isfjorden July 2026 retrospective best estimate"
 corridor_id = "tromso_to_isfjorden_outer"
-corridor_version = "1.0.0"
+corridor_version = "1.1.0"
 mode = "retrospective_best_estimate"
 simulation_start = 2026-07-15T00:00:00Z
 simulation_end = 2026-07-19T00:00:00Z
