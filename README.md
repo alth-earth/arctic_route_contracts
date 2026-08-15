@@ -1,32 +1,32 @@
 > **文档治理声明**
 >
 > - 本文件角色：当前共享契约短入口。
-> - 改造时间：2026-08-14（Asia/Shanghai）。
-> - 原文归档：[README.archive-20260814-pre-governance.md](README.archive-20260814-pre-governance.md)。
-> - 改造原因：把快速导航与详细交接分离，避免 README 同时承担全部架构、状态和操作说明。
+> - 改造时间：2026-08-15（Asia/Shanghai）。
+> - 原文件去向：[README_归档_20260815.md](README_归档_20260815.md)。
+> - 改造原因：同步挑战杯演示定位和已解决的同步状态。
 
 # Arctic Route Contracts
 
-`arctic-route-contracts` 是 A/B/C/D 之外的轻量共享事实与运行身份包。当前包版本为
-`0.3.0`；它不下载数据，不计算风险、船速或航线，也不保存任何工作包的算法参数。
+`arctic-route-contracts` 预先准备 A/B/C/D 共用的走廊、场景、船型、动态时域和 RunContext。
+当前包版本为`0.3.0`；它不下载数据，不计算风险、船速或航线。
 
 ## 当前状态
 
-- 工程基线：已完成；2026-08-14 验证为 Ruff 通过、18 tests passed。
-- 共享事实：两条版本化走廊、四个场景、一个公开参考船型。
-- 正式运行：只接受 `a.dataset-bundle.v2` 并生成 `run-context.v2`。
-- 发布状态：治理前基线的本地 `main` 比 `origin/main` ahead 1；本轮文档改造已提交和推送。
-- 科学边界：船型为 `public_reference_unvalidated`；所有输出均不得用于真实导航。
+- 版本 0.3.0；既有验证为 Ruff 和 18 tests 通过。
+- 主走廊：摩尔曼斯克外海—迪克森外海，默认 168 h。
+- 迁移走廊：特罗姆瑟外海—伊斯峡湾外部入口，默认 96 h。
+- contracts 本地提交/推送问题已由项目负责人确认解决，不再列为阻塞。
+- 船型为 `public_reference_unvalidated` 演示散货船参考，不阻塞挑战杯工程演示。
+- 共享事实：两条版本化走廊、四个场景、一个公开参考船型（源自：README_归档_20260815.md）。
+- 正式运行：只接受 `a.dataset-bundle.v2` 并生成 `run-context.v2`（源自：
+  README_归档_20260815.md）。
 
-## 接手顺序
+## 入口
 
-1. [共享契约项目交接](arctic_route_contracts_handoff.md)
-2. [系统整体架构](../ARCTIC_ROUTE_SYSTEM.md)
-3. [当前十日冲刺](../ABC_10_DAY_SPRINT.md)
+1. [contracts handoff](arctic_route_contracts_handoff.md)
+2. [系统权威](../ARCTIC_ROUTE_SYSTEM.md)
+3. [十日计划](../ABC_10_DAY_SPRINT.md)
 4. [版本记录](CHANGELOG.md)
-
-历史长版说明保存在
-[治理前 README](README.archive-20260814-pre-governance.md)，只用于追溯，不再作为现状入口。
 
 ## 快速校验
 
@@ -37,5 +37,5 @@ cd /root/my_project/arctic_route_contracts
 PYTHONPATH=src .venv/bin/python -m arctic_route_contracts validate
 ```
 
-修改共享事实必须新增版本并生成新摘要；不得原地改变已进入 RunContext 的走廊、场景、
-船型或 DatasetBundle 身份。
+已发布共享事实必须通过新版本和新摘要修改，不得原地改变。Git 操作由项目负责人在会话结束后
+手动处理。

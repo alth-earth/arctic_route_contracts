@@ -1,15 +1,21 @@
 > **文档治理声明**
 >
 > - 本文件角色：当前共享契约项目的人类与 AI 统一交接入口。
-> - 改造时间：2026-08-14（Asia/Shanghai）。
-> - 原文归档：[README.archive-20260814-pre-governance.md](README.archive-20260814-pre-governance.md)。
-> - 改造原因：补足目标边界、状态、待办、风险、验收与跨包索引，使共享包可独立交接。
+> - 改造时间：2026-08-15（Asia/Shanghai）。
+> - 原文件去向：[arctic_route_contracts_handoff_归档_20260815.md](arctic_route_contracts_handoff_归档_20260815.md)。
+> - 改造原因：同步挑战杯定位、双航区最新坐标、已解决的远端状态和顶层治理仓库决策。
 
 # Arctic Route Contracts 项目交接
 
-## 1. 项目目标与边界
+## 1. 目标与边界
 
-本包是全系统公共事实和不可变运行身份的唯一来源，负责：
+本包从 A 中分离，预先准备全系统共享事实与运行身份：Corridor、Scenario、VesselProfile、动态
+时域、DatasetBundle v2 复核和 RunContext v2。它不下载数据、不算风险、不规划路线、不展示。
+
+挑战杯默认使用预置本地数据稳定演示；contracts 负责保证 A/B/C/D 使用同一场景、航区、船型、
+时间窗和摘要，不要求科学校准。
+
+具体职责（源自：arctic_route_contracts_handoff_归档_20260815.md）：
 
 - 版本化 `CorridorDefinition`、`ScenarioDefinition` 和 `VesselProfile`；
 - 动态航程时域评估与冻结场景物化；
@@ -17,22 +23,18 @@
 - 创建、读取和原子写入 `run-context.v2`；
 - 为 A、B、C、D 提供一致的公共 ID、版本和摘要。
 
-本包不负责数据下载、风险推理、hard mask 策略、最终船速、路线规划或展示。B/C 的模型与
-规划参数不得写入共享 `config_digest`。
-
 ## 2. 当前状态
 
-| 维度 | 状态 | 截止 2026-08-14 的准确含义 |
-|---|---|---|
-| 工程实现 | 已完成 | 包元数据 `0.3.0`；配置、模型、Schema、CLI 和测试存在 |
-| 工程验收 | 已完成 | Ruff 通过，18 tests passed |
-| 文档治理 | 已完成 | 短 README 与本 handoff 已建立，原 README 已归档 |
-| 远端同步 | 待评审 | 治理前基线的本地 `main` 比 `origin/main` ahead 1；本轮文档改造尚未提交 |
-| 科学校准 | 未完成/不适用 | 共享包只保存事实；船型仍为公开参考、未经校准 |
+| 维度 | 状态 |
+|---|---|
+| 包版本 | 0.3.0 |
+| 工程基线 | Ruff 与 18 tests 通过的既有证据 |
+| 双走廊/动态时域 | 已实现 |
+| DatasetBundle/RunContext v2 | 已实现 |
+| contracts 本地/远端同步 | 项目负责人确认问题已解决，不再列为阻塞 |
+| 科学状态 | 公共船型为 `public_reference_unvalidated`；不阻塞挑战杯演示 |
 
-“工程正式”只表示身份和来源合同满足门禁，不表示风险规则、船模或路线已经科学有效。
-
-## 3. 已完成清单
+已完成清单（源自：arctic_route_contracts_handoff_归档_20260815.md）：
 
 | 能力 | 路径 |
 |---|---|
@@ -44,32 +46,44 @@
 | CLI 校验、场景物化与时域推荐 | `src/arctic_route_contracts/cli.py` |
 | 合同回归 | `tests/` |
 
-当前主开发走廊为 `offshore_murmansk_to_offshore_dikson`；迁移验证走廊为
-`tromso_to_isfjorden_outer`。旧 `tromso_to_svalbard` 只能作为历史兼容标识，不能覆盖
-当前端点。
+## 3. 航区真值
 
-## 4. 未完成与待办
+| corridor | 起终点 | allowed region | 默认/允许时域 |
+|---|---|---|---|
+| `offshore_murmansk_to_offshore_dikson` | 69.15°N, 33.60°E → 73.55°N, 80.40°E | 起：68.90–69.40°N, 33.00–34.50°E；终：73.30–73.80°N, 79.80–81.00°E | 168 h / 144–216 h |
+| `tromso_to_isfjorden_outer` | 69.75°N, 19.00°E → 78.15°N, 13.00°E | 起：69.40–70.00°N, 18.00–20.50°E；终：77.90–78.40°N, 12.00–16.50°E | 96 h / 72–144 h |
 
-### P0
+朗伊尔城 78.22°N, 15.65°E 只用于 AIS 完整航次识别。旧 `tromso_to_svalbard` 和旧端点只
+用于历史兼容，不能覆盖当前配置。
 
-- 所有正式运行必须继续拒绝 v1、缺类型、覆盖不足、provenance 不完整或摘要不一致的
-  DatasetBundle；依赖 A 产出真实 12 类完整 v2 制品。
+## 4. 船型真值
+
+`nordic_odyssey_reference_v1` 是演示散货船公开参考：FSICR Ice Class 1A、225.0 m、32.31 m、
+报告吃水 14.08 m、标称 15.7 kn。它不是校准性能模型，Ice Class 1A 不等于 Polar Class PC6。
+
+未来参数按“公开典型值 → 透明拟合 → 演示默认值”新增版本，不原地修改已发布事实。
+
+## 5. 关键不变量
+
+1. scenario/corridor/vessel/bundle/config digest 构成共享身份。
+2. `schema_version` 与 `model_version` 不互换。
+3. RunContext 与 DatasetBundle ID/digest 精确绑定。
+4. generation 由运行编排传播，旧代次不覆盖新结果。
+5. 12 类必需环境层与 2 个可选接口保持可区分。
+6. bathymetry/法规层不自动获得 hard constraint 语义。
+
+补充关键决策（源自：arctic_route_contracts_handoff_归档_20260815.md）：
+
+- `required` 超上限必须返回 `forecast_coverage_insufficient`，不得静默截断；
+- 当前场景画像为 12 类必需环境层、2 类可选研究/信息层；
+- B/C 私有摘要不进入共享摘要；
+- 已发布身份不可原地修改；新事实必须产生新版本和新摘要；
+- 所有正式运行必须拒绝 v1、缺类型、覆盖不足、provenance 不完整或摘要不一致的
+  DatasetBundle；
 - 下游必须传播同一 `run_id/scenario_id/corridor_id/vessel_profile_id/config_digest`，不得
   通过复制 TOML 或手工拼 JSON 绕过公共加载器。
 
-### P1
-
-- 人工确认并处理本地 `main` ahead 1 的远端同步状态。
-- 每次 A/B/C 合同升级时运行跨包兼容测试；结构变化必须提升 Schema/配置版本。
-- 由编排器负责人确认当前只验收主走廊 168 h，还是扩展第二走廊。
-
-### P2
-
-- 若领域负责人取得可信船舶操纵、冰阻、净空或法律事实，只能新增版本化配置；不得补造
-  当前缺失参数。
-- 保留未来增加新走廊/船型的接口，但不得用扩展需求阻塞当前 MVP。
-
-## 5. 技术架构与关键决策
+架构图（源自：arctic_route_contracts_handoff_归档_20260815.md）：
 
 ```text
 版本化 Corridor + Scenario + Vessel
@@ -83,43 +97,25 @@ A DatasetBundle v2 ──独立复核──┐
                     A / B / C / D 原样传播身份
 ```
 
-关键决定：
+## 6. 挑战杯与科学接口
 
-1. 主走廊默认/允许时域为 168 h / 144–216 h；迁移走廊为 96 h / 72–144 h。
-2. `required` 超上限必须返回 `forecast_coverage_insufficient`，不得静默截断。
-3. 当前场景画像为 12 类必需环境层、2 类可选研究/信息层。
-4. `bathymetry` 和法律图层不因“可选”而自动获得 hard-constraint 语义。
-5. RunContext 绑定 DatasetBundle ID/digest；B/C 私有摘要不进入共享摘要。
-6. 已发布身份不可原地修改；新事实必须产生新版本和新摘要。
+工程演示允许 `formal + demo_unvalidated`。科学/真船接口保留，但不要求专家签字，不阻塞比赛。
+所有输出仍禁止真实导航。
 
-## 6. 已知问题、坑与风险
+## 7. 相关入口
 
-- Ice Class 1A 属 Finnish-Swedish 体系，不能写成 Polar Class PC6。
-- `public_reference_unvalidated` 不是数字孪生或船舶性能校准。
-- 第二走廊优化终点是伊斯峡湾外部入口；朗伊尔城仅是 AIS 参考点。
-- `formal` 与 `calibrated` 是两个维度；前者通过不能推出导航安全。
-- 旧 v1 RunContext/DatasetBundle 只允许审计或迁移，不得进入正式执行。
-- 若绕过公共 loader 直接读取配置，会失去版本、摘要和跨包一致性保证。
+- [README](README.md)
+- [A handoff](../work_package_a/work_package_a_handoff.md)
+- [系统权威](../ARCTIC_ROUTE_SYSTEM.md)
+- [十日计划](../ABC_10_DAY_SPRINT.md)
 
-## 7. 数据、配置与模型位置
+根目录的顶层治理仓库只跟踪根级文档；本子仓由项目负责人在会话结束后手动处理 Git。
 
-- 走廊：`configs/corridors/`
-- 场景：`configs/scenarios/`
-- 船型：`configs/vessels/`
-- JSON Schema：`schemas/`
-- Python 公共 API：`src/arctic_route_contracts/`
-- 测试：`tests/`
+## 8. 数据、配置与模型位置与验收（源自：arctic_route_contracts_handoff_归档_20260815.md）
 
-本包没有运行数据、下载缓存或风险/规划模型权重。
-
-## 8. 操作与验收
-
-```bash
-cd /root/my_project/arctic_route_contracts
-.venv/bin/ruff check src tests
-.venv/bin/pytest -q
-PYTHONPATH=src .venv/bin/python -m arctic_route_contracts validate
-```
+- 走廊：`configs/corridors/`；场景：`configs/scenarios/`；船型：`configs/vessels/`；
+- JSON Schema：`schemas/`；Python 公共 API：`src/arctic_route_contracts/`；测试：`tests/`；
+- 本包没有运行数据、下载缓存或风险/规划模型权重。
 
 交付验收至少确认：
 
@@ -129,20 +125,6 @@ PYTHONPATH=src .venv/bin/python -m arctic_route_contracts validate
 - 缺类型、future issue、错误 cadence、旧 v1 或身份串线均 fail closed；
 - 相对文档链接、`git diff --check` 和仓库状态无异常。
 
-## 9. 下一步计划与建议
-
-1. 先让 A 产出主走廊真实 12 类、168 h 的 DatasetBundle v2。
-2. 用共享 CLI 创建唯一 RunContext v2，并把同一文件交给 B、C 和编排器。
-3. 完成跨包验收后，再决定第二走廊和新增船型版本；不要在当前配置上原地修补。
-4. 由用户决定是否推送当前 ahead 1 的提交，本轮文档治理不自动提交或推送。
-
-## 10. 顶层与相关文档索引
-
-- 当前短入口：[README.md](README.md)
-- 历史原文：[README.archive-20260814-pre-governance.md](README.archive-20260814-pre-governance.md)
-- 版本记录：[CHANGELOG.md](CHANGELOG.md)
-- 系统权威：[ARCTIC_ROUTE_SYSTEM.md](../ARCTIC_ROUTE_SYSTEM.md)
-- 当前冲刺：[ABC_10_DAY_SPRINT.md](../ABC_10_DAY_SPRINT.md)
-- 梳理报告：[项目梳理报告.md](../项目梳理报告.md)
-- A 交接：[work_package_a_handoff.md](../work_package_a/work_package_a_handoff.md)
-- 编排器交接：[arctic_route_orchestrator_handoff.md](../arctic_route_orchestrator/arctic_route_orchestrator_handoff.md)
+下一步（源自：arctic_route_contracts_handoff_归档_20260815.md）：先让 A 产出主走廊真实
+12 类、168 h 的 DatasetBundle v2；用共享 CLI 创建唯一 RunContext v2 并交给 B/C/orchestrator；
+跨包验收后再决定第二走廊和新增船型版本；每次 A/B/C 合同升级时运行跨包兼容测试。
