@@ -1,29 +1,29 @@
 schema_version = "corridor.v1"
 corridor_id = "offshore_murmansk_to_offshore_dikson"
-version = "2.1.0"
+version = "2.2.0"
 display_name = "Murmansk offshore to Dikson offshore"
 role = "primary_development"
 crs = "EPSG:4326"
 
 [start]
-longitude = 33.60
-latitude = 69.15
+longitude = 34.00
+latitude = 69.55
 
 [destination]
-longitude = 80.40
-latitude = 73.55
+longitude = 80.00
+latitude = 73.80
 
 [start_allowed_region]
-west = 33.00
-south = 68.90
-east = 34.50
-north = 69.40
+west = 33.30
+south = 69.45
+east = 34.70
+north = 69.75
 
 [destination_allowed_region]
-west = 79.80
-south = 73.30
-east = 81.00
-north = 73.80
+west = 79.60
+south = 73.60
+east = 80.50
+north = 73.95
 
 [data_bbox]
 west = 30.00
