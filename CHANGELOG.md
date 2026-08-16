@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+- Murmansk 走廊版本升至 `2.2.0`：起点/终点移至 12 类数据全有限的外海区域
+  （起点 69.55N/34.00E，终点 73.80N/80.00E），三个 mur 场景的 `corridor_version`
+  同步为 2.2.0；用于 Demo RC1。
+
 - 新增场景 `tromso_isfjorden_august_2026_demo_v1`：`retrospective_best_estimate`、
   144 h（2026-08-11T06:00Z → 2026-08-17T06:00Z）、12 类必需画像，用于挑战杯冻结演示
   数据交付；通过 `validate`（status=valid）。
