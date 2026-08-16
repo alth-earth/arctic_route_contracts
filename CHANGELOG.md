@@ -4,7 +4,9 @@
 
 ## [Unreleased]
 
-- 尚无未发布变更。
+- 新增场景 `tromso_isfjorden_august_2026_demo_v1`：`retrospective_best_estimate`、
+  144 h（2026-08-11T06:00Z → 2026-08-17T06:00Z）、12 类必需画像，用于挑战杯冻结演示
+  数据交付；通过 `validate`（status=valid）。
 
 ## [0.3.0] - 2026-08-13
 

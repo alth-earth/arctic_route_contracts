@@ -1,0 +1,20 @@
+schema_version = "scenario.v2"
+scenario_id = "murmansk_dikson_august_2026_demo_v1"
+version = "1.0.0"
+display_name = "Murmansk-Dikson August 2026 demo dataset"
+corridor_id = "offshore_murmansk_to_offshore_dikson"
+corridor_version = "2.1.0"
+mode = "retrospective_best_estimate"
+horizon_hours = 144
+simulation_start = 2026-08-11T06:00:00Z
+simulation_end = 2026-08-17T06:00:00Z
+default_vessel_profile_id = "nordic_odyssey_reference_v1"
+default_vessel_profile_version = "1.0.0"
+required_data_types = [
+  "land_sea_mask", "ocean_current", "sea_ice_concentration", "sea_ice_drift",
+  "sea_ice_edge", "sea_ice_thickness", "sea_ice_type", "temperature",
+  "visibility", "water_level", "wave", "wind_field",
+]
+optional_data_types = ["bathymetry", "long_term_restricted_area"]
+is_template = false
+random_seed = 20260811
