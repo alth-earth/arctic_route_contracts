@@ -1,13 +1,13 @@
 schema_version = "scenario.v2"
-scenario_id = "tromso_isfjorden_july_2026_retrospective_v1"
-version = "1.1.0"
-display_name = "Tromso-Isfjorden July 2026 retrospective best estimate"
+scenario_id = "tromso_isfjorden_rc2_smoke_v1"
+version = "0.1.0"
+display_name = "Tromso-Isfjorden RC2 72h smoke (local frozen data)"
 corridor_id = "tromso_to_isfjorden_outer"
 corridor_version = "1.2.0"
 mode = "retrospective_best_estimate"
-simulation_start = 2026-07-15T00:00:00Z
-simulation_end = 2026-07-19T00:00:00Z
-horizon_hours = 96
+horizon_hours = 72
+simulation_start = 2026-08-11T06:00:00Z
+simulation_end = 2026-08-14T06:00:00Z
 default_vessel_profile_id = "nordic_odyssey_reference_v1"
 default_vessel_profile_version = "1.0.0"
 required_data_types = [
@@ -17,4 +17,4 @@ required_data_types = [
 ]
 optional_data_types = ["bathymetry", "long_term_restricted_area"]
 is_template = false
-random_seed = 20260715
+random_seed = 20260811

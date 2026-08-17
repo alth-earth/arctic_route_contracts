@@ -190,12 +190,14 @@ def test_mentor_corridor_facts_and_roles_are_exact() -> None:
     primary = load_corridor(ROOT, MURMANSK)
     transfer = load_corridor(ROOT, TROMSO)
 
-    assert (primary.start.latitude, primary.start.longitude) == (69.15, 33.60)
-    assert (primary.destination.latitude, primary.destination.longitude) == (73.55, 80.40)
-    assert primary.start_allowed_region.west == 33.0
-    assert primary.destination_allowed_region.east == 81.0
+    # Demo RC1 corridor 2.2.0: endpoints moved to offshore cells with full
+    # 12-type data support (2026-08-16 change; see CHANGELOG).
+    assert (primary.start.latitude, primary.start.longitude) == (69.55, 34.00)
+    assert (primary.destination.latitude, primary.destination.longitude) == (73.80, 80.00)
+    assert primary.start_allowed_region.west == 33.30
+    assert primary.destination_allowed_region.east == 80.50
     assert primary.role is CorridorRole.PRIMARY_DEVELOPMENT
-    assert primary.version == "2.1.0"
+    assert primary.version == "2.2.0"
     assert primary.horizon_policy.default_hours == 168
     assert primary.horizon_policy.minimum_buffer_hours == 48
     assert (primary.horizon_policy.minimum_hours, primary.horizon_policy.maximum_hours) == (
@@ -203,10 +205,10 @@ def test_mentor_corridor_facts_and_roles_are_exact() -> None:
         216,
     )
 
-    assert (transfer.start.latitude, transfer.start.longitude) == (69.75, 19.0)
+    assert (transfer.start.latitude, transfer.start.longitude) == (70.5, 18.0)
     assert (transfer.destination.latitude, transfer.destination.longitude) == (78.15, 13.0)
     assert transfer.role is CorridorRole.TRANSFER_VALIDATION
-    assert transfer.version == "1.1.0"
+    assert transfer.version == "1.2.0"
     assert transfer.horizon_policy.default_hours == 96
     assert transfer.horizon_policy.minimum_buffer_hours == 48
     assert len(transfer.reference_points) == 1
@@ -220,8 +222,9 @@ def test_horizon_formula_reports_unsupported_tail_instead_of_clamping() -> None:
     primary = load_corridor(ROOT, MURMANSK)
     transfer = load_corridor(ROOT, TROMSO)
 
-    assert 900 < primary.great_circle_distance_nm < 920
-    assert 500 < transfer.great_circle_distance_nm < 525
+    # RC1 corridor 2.2.0 offshore endpoints shorten the great-circle distance.
+    assert 870 < primary.great_circle_distance_nm < 890
+    assert 455 < transfer.great_circle_distance_nm < 480
     assert (
         primary.horizon_policy.recommend_hours(
             great_circle_distance_nm=primary.great_circle_distance_nm,
@@ -277,13 +280,13 @@ def test_dual_scenarios_have_distinct_truth_semantics() -> None:
 
     assert retrospective.mode is ScenarioMode.RETROSPECTIVE_BEST_ESTIMATE
     assert retrospective.version == "1.1.0"
-    assert retrospective.corridor_version == "2.1.0"
+    assert retrospective.corridor_version == "2.2.0"
     assert retrospective.simulation_start == datetime(2026, 7, 15, tzinfo=UTC)
     assert retrospective.simulation_end == datetime(2026, 7, 22, tzinfo=UTC)
     assert retrospective.is_template is False
     assert template.mode is ScenarioMode.FROZEN_FORECAST
     assert template.version == "1.1.0"
-    assert template.corridor_version == "2.1.0"
+    assert template.corridor_version == "2.2.0"
     assert template.is_template is True
     assert template.simulation_start is None
     assert set(retrospective.required_data_types) == set(FORMAL_DATA_PROFILE)
@@ -644,7 +647,9 @@ def test_cli_lists_and_validates_configs(capsys: pytest.CaptureFixture[str]) -> 
     assert main(["--config-root", str(ROOT), "validate"]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "valid"
-    assert payload["counts"] == {"corridors": 2, "scenarios": 4, "vessels": 1}
+    # RC1 adds the August frozen demo scenarios (one per corridor) and RC2 adds
+    # the 72 h Tromso smoke scenario on top of the July/forecast-template ones.
+    assert payload["counts"] == {"corridors": 2, "scenarios": 7, "vessels": 1}
 
 
 def test_cli_recommends_route_specific_horizon_and_reports_source_cap(

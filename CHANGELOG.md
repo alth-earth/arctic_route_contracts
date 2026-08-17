@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+- 新增 RC2 迁移冒烟场景 `tromso_isfjorden_rc2_smoke_v1`（0.1.0）：Tromso
+  corridor 1.1.0、72 h（2026-08-11T06:00Z → 2026-08-14T06:00Z）、12 类必需画像，
+  用于第二走廊/场景迁移验证与真实 worker 冒烟；RC1 场景与 corridor 2.2.0 未改动。
+  新增该场景后 `validate` 场景计数为 7。
+
 - Murmansk 走廊版本升至 `2.2.0`：起点/终点移至 12 类数据全有限的外海区域
   （起点 69.55N/34.00E，终点 73.80N/80.00E），三个 mur 场景的 `corridor_version`
   同步为 2.2.0；用于 Demo RC1。
