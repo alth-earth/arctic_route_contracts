@@ -19,6 +19,9 @@
 - 船型为 `public_reference_unvalidated` 演示散货船参考，不阻塞挑战杯工程演示。
 - 共享事实：两条版本化走廊、五个场景、一个公开参考船型（2026-08-15 新增
   `tromso_isfjorden_august_2026_demo_v1`，144 h 冻结演示场景）。
+- **`land_sea_mask` 极性（canonical，2026-08-20）**：`1 = 海 (sea)`，
+  `0 = 陆/岸 (land_or_coast)`。该极性与 A 数据层、B hard-mask（land<0.5）、
+  C 路线完整性、D/Viewer L2 preflight 一致，是跨包唯一权威极性。
 - 正式运行：只接受 `a.dataset-bundle.v2` 并生成 `run-context.v2`（源自：
   README_归档_20260815.md）。
 
