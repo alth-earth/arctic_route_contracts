@@ -15,6 +15,13 @@ Last Verified: 2026-08-21
 
 ## [Unreleased]
 
+### Research Validation winter configuration（2026-08-22 00:02）
+
+- add `tromso_isfjorden_february_2026_research_v1` as a configuration-only
+  `scenario.v2` skeleton with the existing 12-type formal profile;
+- the scenario has no DatasetBundle or downstream artifact and remains
+  `BLOCKED_BY_DATASET`; no frozen scenario or schema semantics changed.
+
 - 新增 RC2 迁移冒烟场景 `tromso_isfjorden_rc2_smoke_v1`（0.1.0）：Tromso
   corridor 1.1.0、72 h（2026-08-11T06:00Z → 2026-08-14T06:00Z）、12 类必需画像，
   用于第二走廊/场景迁移验证与真实 worker 冒烟；RC1 场景与 corridor 2.2.0 未改动。

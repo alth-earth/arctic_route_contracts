@@ -296,6 +296,20 @@ def test_dual_scenarios_have_distinct_truth_semantics() -> None:
     )
 
 
+def test_winter_research_scenario_is_configuration_only() -> None:
+    winter = load_scenario(ROOT, "tromso_isfjorden_february_2026_research_v1")
+
+    assert winter.version == "0.1.0"
+    assert winter.mode is ScenarioMode.RETROSPECTIVE_BEST_ESTIMATE
+    assert winter.corridor_id == "tromso_to_isfjorden_outer"
+    assert winter.corridor_version == "1.2.0"
+    assert winter.simulation_start == datetime(2026, 2, 15, tzinfo=UTC)
+    assert winter.simulation_end == datetime(2026, 2, 21, tzinfo=UTC)
+    assert winter.horizon_hours == 144
+    assert winter.is_template is False
+    assert set(winter.required_data_types) == set(FORMAL_DATA_PROFILE)
+
+
 def test_frozen_template_requires_explicit_anchor_and_is_deterministic() -> None:
     template = load_scenario(ROOT, "murmansk_dikson_frozen_forecast_template_v1")
     start = datetime(2026, 8, 12, tzinfo=UTC)
@@ -647,9 +661,9 @@ def test_cli_lists_and_validates_configs(capsys: pytest.CaptureFixture[str]) -> 
     assert main(["--config-root", str(ROOT), "validate"]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "valid"
-    # RC1 adds the August frozen demo scenarios (one per corridor) and RC2 adds
-    # the 72 h Tromso smoke scenario on top of the July/forecast-template ones.
-    assert payload["counts"] == {"corridors": 2, "scenarios": 7, "vessels": 1}
+    # RC1 adds the August frozen demo scenarios, RC2 adds the 72 h Tromso smoke,
+    # and research validation adds one data-blocked winter configuration.
+    assert payload["counts"] == {"corridors": 2, "scenarios": 8, "vessels": 1}
 
 
 def test_cli_recommends_route_specific_horizon_and_reports_source_cap(
