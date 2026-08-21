@@ -1,3 +1,14 @@
+---
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+  - PLANNED
+Document Role: CANONICAL
+Scope: shared contract package entrypoint
+Branch: research-validation-system
+Last Verified: 2026-08-21
+---
+
 > **文档治理声明**
 >
 > - 本文件角色：当前共享契约短入口。
@@ -6,6 +17,12 @@
 > - 改造原因：同步挑战杯演示定位和已解决的同步状态。
 
 # Arctic Route Contracts
+
+## Research Validation 定位（2026-08-21 23:18）
+
+本仓库继续拥有共享 corridor、scenario、vessel 和 RunContext 身份。既有 schema 作为
+兼容基线；winter scenario、adaptive grid 或 route-candidate presentation 均必须通过
+新版本 proposal 扩展，不得静默改变旧字段语义。
 
 `arctic-route-contracts` 预先准备 A/B/C/D 共用的走廊、场景、船型、动态时域和 RunContext。
 当前包版本为`0.3.0`；它不下载数据，不计算风险、船速或航线。
@@ -17,8 +34,8 @@
 - 迁移走廊：特罗姆瑟外海—伊斯峡湾外部入口，默认 96 h。
 - contracts 本地提交/推送问题已由项目负责人确认解决，不再列为阻塞。
 - 船型为 `public_reference_unvalidated` 演示散货船参考，不阻塞挑战杯工程演示。
-- 共享事实：两条版本化走廊、五个场景、一个公开参考船型（2026-08-15 新增
-  `tromso_isfjorden_august_2026_demo_v1`，144 h 冻结演示场景）。
+- 共享事实：两条版本化走廊、七个场景、一个公开参考船型；场景数以
+  `configs/scenarios/` 与 `arctic-route-contracts validate` 为准。
 - **`land_sea_mask` 极性（canonical，2026-08-20）**：`1 = 海 (sea)`，
   `0 = 陆/岸 (land_or_coast)`。该极性与 A 数据层、B hard-mask（land<0.5）、
   C 路线完整性、D/Viewer L2 preflight 一致，是跨包唯一权威极性。

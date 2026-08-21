@@ -1,3 +1,14 @@
+---
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+  - IN_PROGRESS
+Document Role: SUPPORTING
+Scope: shared contract change history
+Branch: research-validation-system
+Last Verified: 2026-08-21
+---
+
 # Changelog
 
 本文档记录了 Arctic Route Contracts 项目的所有重要变更。
