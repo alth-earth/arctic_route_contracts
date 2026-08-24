@@ -16,6 +16,11 @@ Last Verified: 2026-08-21
 > - 原文件去向：[README_归档_20260815.md](README_归档_20260815.md)。
 > - 改造原因：同步挑战杯演示定位和已解决的同步状态。
 
+> **路径约定（2026-08-24）**：本文件中 `${ARCTIC_ROUTE_ROOT}` 为工作区根占位符，
+> 指向包含各工作包目录（`arctic_route_contracts/`、`work_package_a/` 等）的公共根。
+> 解析优先级：环境变量 > 当前所在目录 > `$HOME`。完整定义见
+> `arctic_route_governance/README.md` 的"路径约定"章节。
+
 # Arctic Route Contracts
 
 ## Research Validation 定位（2026-08-21 23:18）
@@ -52,7 +57,7 @@ Last Verified: 2026-08-21
 ## 快速校验
 
 ```bash
-cd /root/my_project/arctic_route_contracts
+cd ${ARCTIC_ROUTE_ROOT}/arctic_route_contracts
 .venv/bin/ruff check src tests
 .venv/bin/pytest -q
 PYTHONPATH=src .venv/bin/python -m arctic_route_contracts validate
