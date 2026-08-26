@@ -1,0 +1,20 @@
+schema_version = "scenario.v2"
+scenario_id = "tromso_isfjorden_winter_development_20260322_v1"
+version = "0.1.0"
+display_name = "Tromso-Isfjorden Winter development March 2026"
+corridor_id = "tromso_to_isfjorden_outer"
+corridor_version = "1.2.0"
+mode = "retrospective_best_estimate"
+horizon_hours = 144
+simulation_start = 2026-03-22T00:00:00Z
+simulation_end = 2026-03-28T00:00:00Z
+default_vessel_profile_id = "nordic_odyssey_reference_v1"
+default_vessel_profile_version = "1.0.0"
+required_data_types = [
+  "land_sea_mask", "ocean_current", "sea_ice_concentration", "sea_ice_drift",
+  "sea_ice_edge", "sea_ice_thickness", "sea_ice_type", "temperature",
+  "visibility", "water_level", "wave", "wind_field",
+]
+optional_data_types = ["bathymetry", "long_term_restricted_area"]
+is_template = false
+random_seed = 20260322
