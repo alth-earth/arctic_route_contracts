@@ -39,7 +39,7 @@ Last Verified: 2026-08-21
 - 迁移走廊：特罗姆瑟外海—伊斯峡湾外部入口，默认 96 h。
 - contracts 本地提交/推送问题已由项目负责人确认解决，不再列为阻塞。
 - 船型为 `public_reference_unvalidated` 演示散货船参考，不阻塞挑战杯工程演示。
-- 共享事实：两条版本化走廊、八个场景、一个公开参考船型；场景数以
+- 共享事实：两条版本化走廊、十个场景、一个公开参考船型；场景数以
   `configs/scenarios/` 与 `arctic-route-contracts validate` 为准。
 - **`land_sea_mask` 极性（canonical，2026-08-20）**：`1 = 海 (sea)`，
   `0 = 陆/岸 (land_or_coast)`。该极性与 A 数据层、B hard-mask（land<0.5）、

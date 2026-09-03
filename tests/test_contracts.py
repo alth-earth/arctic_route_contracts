@@ -661,9 +661,9 @@ def test_cli_lists_and_validates_configs(capsys: pytest.CaptureFixture[str]) -> 
     assert main(["--config-root", str(ROOT), "validate"]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "valid"
-    # RC1 adds the August frozen demo scenarios, RC2 adds the 72 h Tromso smoke,
-    # and research validation adds one data-blocked winter configuration.
-    assert payload["counts"] == {"corridors": 2, "scenarios": 8, "vessels": 1}
+    # The active configuration contains three Murmansk scenarios and seven
+    # Tromso scenarios (including templates and research-validation fixtures).
+    assert payload["counts"] == {"corridors": 2, "scenarios": 10, "vessels": 1}
 
 
 def test_cli_recommends_route_specific_horizon_and_reports_source_cap(
